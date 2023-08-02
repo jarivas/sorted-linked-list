@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rivas;
 
-Enum SortedLinkedListType
+enum SortedLinkedListType
 {
     case Integer;
-    case String;   
+    case String;
 }//end enum

@@ -12,4 +12,7 @@ Please check the tests code on tests/Unit
 * ./vendor/bin/phpunit
 
 # Develop hint
-Please run ```cp pre-commit-hook .git/hooks/pre-commit ``` to add different kind of validations
+Please run
+* ```cp pre-commit-hook .git/hooks/pre-commit```
+* ```chmod +x .git/hooks/pre-commit```
+to add different kind of validations

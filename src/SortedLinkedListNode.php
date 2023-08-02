@@ -6,13 +6,85 @@ namespace Rivas;
 
 class SortedLinkedListNode
 {
+
+
     public function __construct(
-        public int|string $value,
-        public SortedLinkedListNode|null $previous = null,
-        public SortedLinkedListNode|null $next = null
+        private int|string $value,
+        private SortedLinkedListNode|null $previousNode=null,
+        private SortedLinkedListNode|null $nextNode=null
         )
     {
-    }
+
+    }//end __construct()
+
+
+    public function setValue(int|string $value): SortedLinkedListNode
+    {
+        $this->value = $value;
+
+        return $this;
+
+    }//end setValue()
+
+
+    public function getValue(): int|string
+    {
+        return $this->value;
+
+    }//end getValue()
+
+
+    public function setPreviousNode(SortedLinkedListNode|null $node): SortedLinkedListNode
+    {
+        $this->previousNode = $node;
+
+        return $this;
+
+    }//end setPreviousNode()
+
+
+    public function getPreviousNode(): SortedLinkedListNode|null
+    {
+        return $this->previousNode;
+
+    }//end getPreviousNode()
+
+
+    public function setNextNode(SortedLinkedListNode|null $node): SortedLinkedListNode
+    {
+        $this->nextNode = $node;
+
+        return $this;
+
+    }//end setNextNode()
+
+
+    public function getNextNode(): SortedLinkedListNode|null
+    {
+        return $this->nextNode;
+
+    }//end getNextNode()
+
+
+    public function equal(int|string $value): bool
+    {
+        return ($this->value == $value);
+
+    }//end equal()
+
+
+    public function greater(int|string $value): bool
+    {
+        return ($this->value > $value);
+
+    }//end greater()
+
+
+    public function less(int|string $value): bool
+    {
+        return ($this->value < $value);
+
+    }//end less()
 
 
 }//end class

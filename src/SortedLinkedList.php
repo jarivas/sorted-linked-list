@@ -6,9 +6,11 @@ namespace Rivas;
 
 class SortedLinkedList
 {
+
     private SortedLinkedListType|null $type = null;
+
     private SortedLinkedListNode|null $list = null;
-    private SortedLinkedListNode|null $last = null;
+
 
     public function __construct(SortedLinkedListType|int|string|null $value)
     {
@@ -25,7 +27,9 @@ class SortedLinkedList
         $this->type = $this->getType($value);
 
         $this->add($value);
-    }
+
+    }//end __construct()
+
 
     public function add(int|string $value): bool
     {
@@ -33,109 +37,173 @@ class SortedLinkedList
             return false;
         }
 
-        if (is_null($this->list)) {
+        $list = $this->list;
+
+        if (is_null($list)) {
             $this->list = new SortedLinkedListNode($value);
-            $this->last = $this->list;
 
             return true;
         }
 
-        return $this->addHelper($value);
-    }
+        if ($list->greater($value)) {
+            $this->list = new SortedLinkedListNode($value, null, $list);
+
+            return true;
+        }
+
+        if ($list->equal($value)) {
+            return true;
+        }
+
+        return $this->addHelper($list, $value);
+
+    }//end add()
+
+
+    /**
+     * @return array<int|string>
+     */
+    public function toArray(): array
+    {
+        $result = [];
+
+        if (is_null($this->list)) {
+            return $result;
+        }
+
+        $current = $this->list;
+
+        while ($current != null) {
+            $result[] = $current->getValue();
+
+            $current = $current->getNextNode();
+        }
+
+        return $result;
+
+    }//end toArray()
+
+
+    public function get(int|string $value): null|SortedLinkedListNode
+    {
+        if (is_null($this->list)) {
+            return null;
+        }
+
+        if (! $this->validateValue($value) || $this->list->greater($value)) {
+            return null;
+        }
+
+        if ($this->list->equal($value)) {
+            return $this->list;
+        }
+
+        return $this->getNode($this->list, $value);
+
+    }//end get()
+
 
     public function exists(int|string $value): bool
     {
-        $node = $this->getNode($value);
+        $node = $this->get($value);
 
-        return empty($node);
-    }
+        return !is_null($node);
+
+    }//end exists()
+
 
     public function remove(int|string $value): bool
     {
-        $node = $this->getNode($value);
-
-        if (empty($node)) {
+        if (is_null($this->list)) {
             return false;
         }
 
-        $node->previous->next = $node->next;
-
-        if ($this->last->value == $value) {
-            $this->last = $node->previous;
+        if (! $this->validateValue($value) || $this->list->greater($value)) {
+            return false;
         }
+
+        if ($this->list->equal($value)) {
+            unset($this->list);
+
+            return true;
+        }
+
+        $node = $this->getNode($this->list, $value);
+
+        if (is_null($node)) {
+            return false;
+        }
+
+        $node->getPreviousNode()?->setNextNode($node->getNextNode());
 
         unset($node);
 
         return true;
-    }
+
+    }//end remove()
+
 
     private function getType(int|string $value): SortedLinkedListType
     {
         return is_int($value) ? SortedLinkedListType::Integer : SortedLinkedListType::String;
-    }
+
+    }//end getType()
+
 
     private function validateValue(int|string $value): bool
     {
         $type = $this->getType($value);
 
         return ($this->type == $type);
-    }
 
-    private function getNode(int|string $value): null|SortedLinkedListNode
+    }//end validateValue()
+
+
+    private function getNode(SortedLinkedListNode $current, int|string $value): null|SortedLinkedListNode
     {
-        if (! $this->validateValue($value)) {
-            return null;
+        $previous = null;
+        $next     = null;
+
+        while ($current != null) {
+            $previous = $current;
+            $next     = $current->getNextNode();
+            $current  = ($next && $next->greater($value)) ? null : $next;
         }
 
-        if ($this->last->value == $value) {
-            return $this->last;
-        }
+        return $previous;
 
-        $node = $this->list;
+    }//end getNode()
 
-        while (($node != null) && ($node->value != $value)) {
-            $node = $node->next;
-        }
 
-        return $node;
-    }
-
-    public function addHelper(int|string $value): bool
+    private function addHelper(SortedLinkedListNode $current, int|string $value): bool
     {
-        $list = $this->list;
-        $last = $this->last;
+        $node = $this->getPreviousNode($current, $value);
 
-        if (($list->value == $value) || ($last->value == $value)) {
+        if ($node->equal($value)) {
             return true;
         }
 
-        if ($last->value < $value) {
-            $node = new SortedLinkedListNode($value, $last);
-
-            $last->previous->next = $node;
-
-            $this->last = $node;
-
-            return true;
-        }
-
-        $node = $this->findNearestNode($value);
-
-        $newNode = new SortedLinkedListNode($value, $node, $node->next);
-
-        $node->next = $newNode;
+        $node->setNextNode(new SortedLinkedListNode($value, $node, $node->getNextNode()));
 
         return true;
-    }
 
-    private function findNearestNode(int|string $value): SortedLinkedListNode
+    }//end addHelper()
+
+
+    private function getPreviousNode(SortedLinkedListNode $current, int|string $value): SortedLinkedListNode
     {
-        $node = $this->list;
+        $previous = $current;
+        $next     = null;
 
-        while (($node != null) && ($value < $node->value)) {
-            $node = $node->next;
+        while ($current != null) {
+            $previous = $current;
+            $next     = $current->getNextNode();
+            $current  = ($next && $next->less($value)) ? $next : null;
         }
 
-        return $node;
-    }
-}//last class
+        return $previous;
+
+    }//end getPreviousNode()
+
+
+}//end class
