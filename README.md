@@ -10,3 +10,6 @@ Please check the tests code on tests/Unit
 # Tests
 * Requires Docker
 * ./vendor/bin/phpunit
+
+# Develop hint
+Please run ```cp pre-commit-hook .git/hooks/pre-commit ``` to add different kind of validations
