@@ -10,7 +10,6 @@ class SortedLinkedListNode
 
     public function __construct(
         private int|string $value,
-        private SortedLinkedListNode|null $previousNode=null,
         private SortedLinkedListNode|null $nextNode=null
         )
     {
@@ -32,22 +31,6 @@ class SortedLinkedListNode
         return $this->value;
 
     }//end getValue()
-
-
-    public function setPreviousNode(SortedLinkedListNode|null $node): SortedLinkedListNode
-    {
-        $this->previousNode = $node;
-
-        return $this;
-
-    }//end setPreviousNode()
-
-
-    public function getPreviousNode(): SortedLinkedListNode|null
-    {
-        return $this->previousNode;
-
-    }//end getPreviousNode()
 
 
     public function setNextNode(SortedLinkedListNode|null $node): SortedLinkedListNode

@@ -32,29 +32,9 @@ class SortedLinkedListNodeTest extends TestCase
     }//end testSetValue()
 
 
-    public function testGetPreviousNode(): void
-    {
-        $node = new SortedLinkedListNode(0, new SortedLinkedListNode(self::VALUE));
-
-        $this->assertSame(self::VALUE, $node->getPreviousNode()->getValue());
-
-    }//end testGetPreviousNode()
-
-
-    public function testSetPreviousNode(): void
-    {
-        $node = new SortedLinkedListNode(0);
-
-        $node->setPreviousNode(new SortedLinkedListNode(self::VALUE));
-
-        $this->assertSame(self::VALUE, $node->getPreviousNode()->getValue());
-
-    }//end testSetPreviousNode()
-
-
     public function testGetNextNode(): void
     {
-        $node = new SortedLinkedListNode(0, null, new SortedLinkedListNode(self::VALUE));
+        $node = new SortedLinkedListNode(0, new SortedLinkedListNode(self::VALUE));
 
         $this->assertSame(self::VALUE, $node->getNextNode()->getValue());
 
